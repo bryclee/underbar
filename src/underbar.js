@@ -118,7 +118,7 @@
           unique.push(value);
       });
     }
-    
+    // faster algorithm for sorted array?
     if (sorted == true){
       _.each(array, function(value, index){
         if (index == 0 || value != array[index - 1])
@@ -181,6 +181,15 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    if (accumulator == undefined)
+      accumulator = null;
+    _.each(collection, function(val){
+      if (accumulator == null)
+        accumulator = val;
+      else
+        accumulator = iterator(accumulator, val);
+    });
+    return accumulator
   };
 
   // Determine if the array or object contains a given value (using `===`).
