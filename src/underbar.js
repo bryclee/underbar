@@ -103,7 +103,9 @@
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
     var unique = [];
-    var sorted, iterator;
+    var sorted,
+        iterator,
+        idx;
     
     if (arguments[1] != undefined)
       sorted = arguments[1];
@@ -111,17 +113,24 @@
       sorted = false;
     if (arguments[2] != undefined)
       iterator = arguments[2];
-     
+    else
+      iterator = function(val){ return val; };
+    
     if (sorted == false){
-      _.each(array, function(value){
-        if (_.indexOf(unique, value) == -1)
-          unique.push(value);
-      });
-    }
+      _.each(array, function(val1){
+        idx = -1;
+        _.each(unique, function(val2, i){
+          if (iterator(val1) == iterator(val2) && idx === -1)
+            idx = i;
+        });
+        if (idx === -1)
+          unique.push(val1);
+    })}
+    
     // faster algorithm for sorted array?
     if (sorted == true){
       _.each(array, function(value, index){
-        if (index == 0 || value != array[index - 1])
+        if (index == 0 || iterator(value) != iterator(array[index - 1]))
           unique.push(value);
       });
     }
